@@ -1,5 +1,6 @@
 // Google sheet npm package
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+const path =require('path');
 
 const CONFIG_FILE_NAME='config.json';
 const GOOGLE_SHEET_CONFIG_FILE_NAME='google_sheet_config.json';
@@ -7,20 +8,32 @@ const GOOGLE_SHEET_CONFIG_FILE_NAME='google_sheet_config.json';
 // File handling package
 const fs = require('fs');
 
+
+const readJsonFile=(file)=>{
+    const result = JSON.parse(fs.readFileSync(path.resolve(__dirname, file)));
+    return result;
+}
+
+const writeJsonFile=(file,content)=>{
+    fs.writeFileSync(path.resolve(__dirname, file),JSON.stringify(content,null,2),'utf8');
+}
 // spreadsheet key is the long id in the sheets URL
 // const SHEET_ID = '1EW93F2m-1qUnlRmdYJDyt9hIy1mHqx3Ofpurt0KhNi4';
 
-const sheetConfig = JSON.parse(fs.readFileSync(GOOGLE_SHEET_CONFIG_FILE_NAME));
 
+const sheetConfig = readJsonFile(GOOGLE_SHEET_CONFIG_FILE_NAME);
 
-// Create a new document
 const doc = new GoogleSpreadsheet(sheetConfig.SHEET_ID);
 
-// Credentials for the service account
-const CREDENTIALS = JSON.parse(fs.readFileSync(CONFIG_FILE_NAME));
+
+const CREDENTIALS = readJsonFile(CONFIG_FILE_NAME);
 
 
+const setGoogleSheetId=(sheetId)=>{
+   writeJsonFile(GOOGLE_SHEET_CONFIG_FILE_NAME,{SHEET_ID:sheetId})
+}
 
+setGoogleSheetId('1EW93F2m-1qUnlRmdYJDyt9hIy1mHqx3Ofpurt0KhNi4');
 
 // const getRow = async (email) => {
 
