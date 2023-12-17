@@ -72,11 +72,12 @@ json_file="$1"
 
 json=$(cat "$json_file")
 
-{
-    echo "{"
+result=$(
+#  echo "{"
     convert_json "$json" "   "
-    echo "}"
-} > en.arb
+    # echo "}"
+)
+
 
 if [[ "${#duplicate_keys[@]}" > 0 ]]; then
     echo "ERROR: Number of duplicate keys: ${#duplicate_keys[@]}"
@@ -84,3 +85,12 @@ if [[ "${#duplicate_keys[@]}" > 0 ]]; then
     exit 1
 
 fi
+
+
+{
+echo "{"
+echo "$result" | sed '$s/,$//'
+echo "}"
+} > ./localization/en.arb
+
+
